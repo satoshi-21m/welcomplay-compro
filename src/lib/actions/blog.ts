@@ -217,12 +217,12 @@ export async function createPost(formData: FormData) {
     await pool.execute(sql, vals)
 
     // ✅ On-Demand Revalidation: Invalidate caches saat create
-    revalidateTag('blog:landing:list')
-    revalidateTag('blog:posts')
-    revalidateTag('blog:recent')
-    revalidateTag('blog:categories')
-    revalidateTag('blog:detail')
-    revalidateTag('blog:related')
+    revalidateTag('blog:landing:list', "")
+    revalidateTag('blog:posts', "")
+    revalidateTag('blog:recent', "")
+    revalidateTag('blog:categories', "")
+    revalidateTag('blog:detail', "")
+    revalidateTag('blog:related', "")
     return { success: true, message: 'Post created successfully' }
   } catch (error: any) {
     return { success: false, message: error.message || 'Failed to create post' }
@@ -286,12 +286,12 @@ export async function updatePost(id: string, formData: FormData) {
 
     const data = await response.json()
     // ✅ On-Demand Revalidation: Invalidate caches saat update
-    revalidateTag('blog:landing:list')
-    revalidateTag('blog:posts')
-    revalidateTag('blog:recent')
-    revalidateTag('blog:categories')
-    revalidateTag('blog:detail')
-    revalidateTag('blog:related')
+    revalidateTag('blog:landing:list', "")
+    revalidateTag('blog:posts', "")
+    revalidateTag('blog:recent', "")
+    revalidateTag('blog:categories', "")
+    revalidateTag('blog:detail', "")
+    revalidateTag('blog:related', "")
     return { success: true, data: data.data, message: 'Post updated successfully' }
   } catch (error: any) {
     return { success: false, message: error.message || 'Failed to update post' }
@@ -312,12 +312,12 @@ export async function deletePost(id: string) {
     await pool.execute(`DELETE FROM posts WHERE id = ?`, [id])
 
     // ✅ On-Demand Revalidation: Invalidate caches saat delete
-    revalidateTag('blog:landing:list')
-    revalidateTag('blog:posts')
-    revalidateTag('blog:recent')
-    revalidateTag('blog:categories')
-    revalidateTag('blog:detail')
-    revalidateTag('blog:related')
+    revalidateTag('blog:landing:list', "")
+    revalidateTag('blog:posts', "")
+    revalidateTag('blog:recent', "")
+    revalidateTag('blog:categories', "")
+    revalidateTag('blog:detail', "")
+    revalidateTag('blog:related', "")
     return { success: true, message: 'Post deleted successfully' }
   } catch (error: any) {
     return { success: false, message: error.message || 'Failed to delete post' }

@@ -37,8 +37,8 @@ export async function POST(request: Request) {
     ) as any
     
     // Revalidate cache
-    revalidateTag('portfolio:categories')
-    revalidateTag('portfolio:landing:list')
+    revalidateTag('portfolio:categories', "")
+    revalidateTag('portfolio:landing:list', "")
     
     return NextResponse.json({
       success: true,

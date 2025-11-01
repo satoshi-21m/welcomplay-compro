@@ -1,42 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Konfigurasi untuk Next.js 15
+  // Konfigurasi untuk Next.js 16
   experimental: {
-    // Opsi yang valid untuk Next.js 15
+    // Opsi yang valid untuk Next.js 16
   },
+  
+  // Turbopack configuration untuk Next.js 16
+  turbopack: {
+    // Silence warning - akan menggunakan default Turbopack optimizations
+    root: process.cwd(),
+  },
+  
+  // Set output file tracing root untuk silence lockfile warning
+  outputFileTracingRoot: process.cwd(),
   
   // Optimasi untuk memory limit di cPanel (nonaktif untuk Vercel)
   // Vercel tidak support standalone output
   ...(process.env.VERCEL_ENV ? {} : { output: 'standalone' }),
-  
-  // Matikan ESLint saat build (sementara)
-  eslint: {
-    ignoreDuringBuilds: true,
-    // Nonaktifkan linting di dev juga dengan tidak melintasi direktori apapun
-    dirs: [],
-  },
-  
-  // Optimasi webpack untuk memory (Vercel-specific optimizations)
-  webpack: (config, { isServer }) => {
-    // Hanya untuk non-Vercel environments
-    if (!process.env.VERCEL_ENV && isServer) {
-      config.optimization = {
-        ...config.optimization,
-        minimize: false, // Disable minification untuk menghemat memory
-      }
-    }
-    
-    // Optimasi untuk memory
-    config.performance = {
-      ...config.performance,
-      hints: false,
-      maxEntrypointSize: 512000,
-      maxAssetSize: 512000,
-    }
-    
-    return config
-  },
-  
+
   // Konfigurasi images
   images: {
     unoptimized: true,
@@ -48,9 +29,13 @@ const nextConfig = {
         hostname: 'welcomplay.com',
         pathname: '/uploads/**',
       },
+      // Local development
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        pathname: '/**',
+      },
     ],
-    // Tambahkan domains untuk backward compatibility
-    domains: ['welcomplay.com', 'localhost'],
   },
   
   // Konfigurasi untuk development dan production

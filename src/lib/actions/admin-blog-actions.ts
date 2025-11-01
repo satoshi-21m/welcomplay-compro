@@ -129,9 +129,9 @@ export async function createBlogPost(data: {
     ) as any
 
     // Revalidate cache (local)
-    revalidateTag('blog:posts')
-    revalidateTag('blog:landing:list')
-    revalidateTag('blog:recent')
+    revalidateTag('blog:posts', "")
+    revalidateTag('blog:landing:list', "")
+    revalidateTag('blog:recent', "")
 
     // Trigger webhook revalidation untuk Vercel production (global cache)
     await revalidateBlog(data.slug).catch(err => 
@@ -277,10 +277,10 @@ export async function updateBlogPostBySlug(slug: string, data: {
     }
 
     // Revalidate cache (local)
-    revalidateTag('blog:posts')
-    revalidateTag('blog:detail')
-    revalidateTag('blog:landing:list')
-    revalidateTag('blog:recent')
+    revalidateTag('blog:posts', "")
+    revalidateTag('blog:detail', "")
+    revalidateTag('blog:landing:list', "")
+    revalidateTag('blog:recent', "")
 
     // Trigger webhook revalidation untuk Vercel production (global cache)
     await revalidateBlog(data.newSlug || slug).catch(err => 
@@ -325,9 +325,9 @@ export async function deleteBlogPost(id: string) {
     }
 
     // Revalidate cache (local)
-    revalidateTag('blog:posts')
-    revalidateTag('blog:landing:list')
-    revalidateTag('blog:recent')
+    revalidateTag('blog:posts', "")
+    revalidateTag('blog:landing:list', "")
+    revalidateTag('blog:recent', "")
 
     // Trigger webhook revalidation untuk Vercel production (global cache)
     await revalidateBlog().catch(err => 
@@ -474,7 +474,7 @@ export async function deleteBlogCategory(name: string) {
     }
 
     // Revalidate cache
-    revalidateTag('blog:categories')
+    revalidateTag('blog:categories', "")
 
     return {
       success: true,

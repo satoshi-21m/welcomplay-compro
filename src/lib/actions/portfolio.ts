@@ -578,9 +578,9 @@ export async function createPortfolio(formData: FormData) {
     }
 
     // ✅ On-Demand Revalidation: Invalidate caches saat create
-    revalidateTag('portfolio:landing:list')
-    revalidateTag('portfolio:posts')
-    revalidateTag('portfolio:detail')
+    revalidateTag('portfolio:landing:list', "")
+    revalidateTag('portfolio:posts', "")
+    revalidateTag('portfolio:detail', "")
     return { success: true, message: 'Portfolio created successfully', data: { id: newId } }
   } catch (error: any) {
     return { success: false, message: error.message || 'Failed to create portfolio' }
@@ -613,9 +613,9 @@ export async function updatePortfolio(id: string, formData: FormData) {
 
     const data = await response.json()
     // ✅ On-Demand Revalidation: Invalidate caches saat update
-    revalidateTag('portfolio:landing:list')
-    revalidateTag('portfolio:posts')
-    revalidateTag('portfolio:detail')
+    revalidateTag('portfolio:landing:list', "")
+    revalidateTag('portfolio:posts', "")
+    revalidateTag('portfolio:detail', "")
     return { success: true, message: data.message }
   } catch (error: any) {
     return { success: false, message: error.message || 'Failed to update portfolio' }
@@ -648,9 +648,9 @@ export async function deletePortfolio(id: string) {
 
     const data = await response.json()
     // ✅ On-Demand Revalidation: Invalidate caches saat delete
-    revalidateTag('portfolio:landing:list')
-    revalidateTag('portfolio:posts')
-    revalidateTag('portfolio:detail')
+    revalidateTag('portfolio:landing:list', "")
+    revalidateTag('portfolio:posts', "")
+    revalidateTag('portfolio:detail', "")
     return { success: true, message: data.message }
   } catch (error: any) {
     return { success: false, message: error.message || 'Failed to delete portfolio' }

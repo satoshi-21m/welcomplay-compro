@@ -36,8 +36,8 @@ export async function createProjectType(data: {
     ) as any
 
     // ⚡ Invalidate cache
-    revalidateTag('project-types')
-    revalidateTag('admin:project-types')
+    revalidateTag('project-types', "")
+    revalidateTag('admin:project-types', "")
 
     return {
       success: true,
@@ -122,9 +122,9 @@ export async function updateProjectType(id: number, data: {
     )
 
     // ⚡ Invalidate cache
-    revalidateTag('project-types')
-    revalidateTag('admin:project-types')
-    revalidateTag('portfolio:items')
+    revalidateTag('project-types', "")
+    revalidateTag('admin:project-types', "")
+    revalidateTag('portfolio:items', "")
 
     return {
       success: true,
@@ -163,8 +163,8 @@ export async function deleteProjectType(id: number) {
     await pool.execute('DELETE FROM project_types WHERE id = ?', [id])
 
     // ⚡ Invalidate cache
-    revalidateTag('project-types')
-    revalidateTag('admin:project-types')
+    revalidateTag('project-types', "")
+    revalidateTag('admin:project-types', "")
 
     return {
       success: true,

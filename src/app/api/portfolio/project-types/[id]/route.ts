@@ -49,8 +49,8 @@ export async function PUT(req: Request, context: { params: Promise<{ id: string 
 
     // Revalidate cache
     const { revalidateTag } = await import('next/cache')
-    revalidateTag('portfolio:project-types')
-    revalidateTag('portfolio:landing:list')
+    revalidateTag('portfolio:project-types', "")
+    revalidateTag('portfolio:landing:list', "")
 
     return NextResponse.json({ success: true, message: 'Project type updated' })
   } catch (e: any) {
@@ -98,8 +98,8 @@ export async function DELETE(req: Request, context: { params: Promise<{ id: stri
     
     // Revalidate cache
     const { revalidateTag } = await import('next/cache')
-    revalidateTag('portfolio:project-types')
-    revalidateTag('portfolio:landing:list')
+    revalidateTag('portfolio:project-types', "")
+    revalidateTag('portfolio:landing:list', "")
     
     return NextResponse.json({ success: true, message: 'Project type deleted' })
   } catch (e: any) {

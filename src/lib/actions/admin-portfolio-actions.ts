@@ -221,8 +221,8 @@ export async function createPortfolio(data: {
     }
 
     // Revalidate cache (local)
-    revalidateTag('portfolio:items')
-    revalidateTag('portfolio:landing:list')
+    revalidateTag('portfolio:items', "")
+    revalidateTag('portfolio:landing:list', "")
 
     // Trigger webhook revalidation untuk Vercel production (global cache)
     await revalidatePortfolio(slug).catch(err => 
@@ -420,9 +420,9 @@ export async function updatePortfolioBySlug(slug: string, data: {
     }
 
     // Revalidate cache (local)
-    revalidateTag('portfolio:items')
-    revalidateTag('portfolio:detail')
-    revalidateTag('portfolio:landing:list')
+    revalidateTag('portfolio:items', "")
+    revalidateTag('portfolio:detail', "")
+    revalidateTag('portfolio:landing:list', "")
     
     // Trigger webhook revalidation untuk Vercel production (global cache)
     await revalidatePortfolio(slug).catch(err => 
@@ -467,8 +467,8 @@ export async function deletePortfolio(id: string) {
     }
 
     // Revalidate cache (local)
-    revalidateTag('portfolio:items')
-    revalidateTag('portfolio:landing:list')
+    revalidateTag('portfolio:items', "")
+    revalidateTag('portfolio:landing:list', "")
     
     // Trigger webhook revalidation untuk Vercel production (global cache)
     await revalidatePortfolio().catch(err => 

@@ -17,10 +17,10 @@ function sanitizeSlugForRedirect(slug: string): string {
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-+|-+$/g, '')
-    .trim()
+    .trim();
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   // Normalisasi path agar tidak perlu duplikasi trailing slash
   const pathKey = pathname !== '/' && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname

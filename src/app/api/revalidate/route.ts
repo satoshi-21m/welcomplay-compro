@@ -30,12 +30,12 @@ export async function POST(request: NextRequest) {
     switch (type) {
       case 'blog':
         // Invalidate blog specific caches
-        revalidateTag('blog:posts')
-        revalidateTag('blog:landing:list')
-        revalidateTag('blog:recent')
-        revalidateTag('blog:categories')
-        revalidateTag('blog:detail')
-        revalidateTag('blog:related')
+        revalidateTag('blog:posts', "")
+        revalidateTag('blog:landing:list', "")
+        revalidateTag('blog:recent', "")
+        revalidateTag('blog:categories', "")
+        revalidateTag('blog:detail', "")
+        revalidateTag('blog:related', "")
         
         // Invalidate paths
         revalidatePath('/blog', 'page')
@@ -50,11 +50,11 @@ export async function POST(request: NextRequest) {
 
       case 'portfolio':
         // Invalidate portfolio specific caches
-        revalidateTag('portfolio:posts')
-        revalidateTag('portfolio:landing:list')
-        revalidateTag('portfolio:items')
-        revalidateTag('portfolio:detail')
-        revalidateTag('portfolio:related')
+        revalidateTag('portfolio:posts', "")
+        revalidateTag('portfolio:landing:list', "")
+        revalidateTag('portfolio:items', "")
+        revalidateTag('portfolio:detail', "")
+        revalidateTag('portfolio:related', "")
         
         // Invalidate paths
         revalidatePath('/portfolio', 'page')
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
         // Revalidate by specific tags
         if (tags && Array.isArray(tags)) {
           tags.forEach((tag: string) => {
-            revalidateTag(tag)
+            revalidateTag(tag, "")
           })
         }
         break
@@ -88,17 +88,17 @@ export async function POST(request: NextRequest) {
         revalidatePath('/', 'layout')
         revalidatePath('/blog', 'page')
         revalidatePath('/portfolio', 'page')
-        revalidateTag('blog:posts')
-        revalidateTag('blog:landing:list')
-        revalidateTag('blog:recent')
-        revalidateTag('blog:categories')
-        revalidateTag('blog:detail')
-        revalidateTag('blog:related')
-        revalidateTag('portfolio:posts')
-        revalidateTag('portfolio:landing:list')
-        revalidateTag('portfolio:items')
-        revalidateTag('portfolio:detail')
-        revalidateTag('portfolio:related')
+        revalidateTag('blog:posts', "")
+        revalidateTag('blog:landing:list', "")
+        revalidateTag('blog:recent', "")
+        revalidateTag('blog:categories', "")
+        revalidateTag('blog:detail', "")
+        revalidateTag('blog:related', "")
+        revalidateTag('portfolio:posts', "")
+        revalidateTag('portfolio:landing:list', "")
+        revalidateTag('portfolio:items', "")
+        revalidateTag('portfolio:detail', "")
+        revalidateTag('portfolio:related', "")
         break
 
       default:

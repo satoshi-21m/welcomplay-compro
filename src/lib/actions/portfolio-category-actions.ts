@@ -90,9 +90,9 @@ export async function createPortfolioCategory(data: CategoryFormData) {
     ) as any
     
     // Revalidate cache
-    revalidateTag('portfolio:categories')
-    revalidateTag('portfolio:landing:list')
-    revalidateTag('admin:portfolio-categories')
+    revalidateTag('portfolio:categories', "")
+    revalidateTag('portfolio:landing:list', "")
+    revalidateTag('admin:portfolio-categories', "")
     
     return {
       success: true,
@@ -146,9 +146,9 @@ export async function updatePortfolioCategory(id: number, data: CategoryFormData
     )
     
     // Revalidate cache
-    revalidateTag('portfolio:categories')
-    revalidateTag('portfolio:landing:list')
-    revalidateTag('admin:portfolio-categories')
+    revalidateTag('portfolio:categories', "")
+    revalidateTag('portfolio:landing:list', "")
+    revalidateTag('admin:portfolio-categories', "")
     
     return {
       success: true,
@@ -187,9 +187,9 @@ export async function deletePortfolioCategory(id: number) {
     await pool.execute('DELETE FROM portfolio_categories WHERE id = ?', [id])
     
     // Revalidate cache
-    revalidateTag('portfolio:categories')
-    revalidateTag('portfolio:landing:list')
-    revalidateTag('admin:portfolio-categories')
+    revalidateTag('portfolio:categories', "")
+    revalidateTag('portfolio:landing:list', "")
+    revalidateTag('admin:portfolio-categories', "")
     
     return {
       success: true,

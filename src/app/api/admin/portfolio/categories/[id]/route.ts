@@ -41,9 +41,9 @@ export async function PUT(
       [name, slug, description, icon, is_active ? 1 : 0, sort_order, id]
     )
     
-    // Revalidate cache
-    revalidateTag('portfolio:categories')
-    revalidateTag('portfolio:landing:list')
+    // Revalidate cache with Next.js 16 syntax
+    revalidateTag('portfolio:categories', '')
+    revalidateTag('portfolio:landing:list', '')
     
     return NextResponse.json({
       success: true,
@@ -82,9 +82,9 @@ export async function DELETE(
     // Delete category
     await pool.execute('DELETE FROM portfolio_categories WHERE id = ?', [id])
     
-    // Revalidate cache
-    revalidateTag('portfolio:categories')
-    revalidateTag('portfolio:landing:list')
+    // Revalidate cache with Next.js 16 syntax
+    revalidateTag('portfolio:categories', '')
+    revalidateTag('portfolio:landing:list', '')
     
     return NextResponse.json({
       success: true,
