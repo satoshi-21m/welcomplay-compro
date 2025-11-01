@@ -7,7 +7,7 @@ const globalForMysql = globalThis as GlobalWithMysql
 const pool: mysql.Pool =
   globalForMysql.mysqlPool ||
   mysql.createPool({
-    host: process.env.DB_HOST || 'welcomplay.com',
+    host: process.env.DB_HOST || 'sgl20.dewaweb.com',
     port: parseInt(process.env.DB_PORT || '3306', 10),
     user: process.env.DB_USER || 'welcompl_user_nextjs',
     password: process.env.DB_PASSWORD || ',xJanED}~vw{N1Lx',
