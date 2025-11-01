@@ -6,6 +6,7 @@ const nextConfig = {
   },
   
   // Turbopack configuration untuk Next.js 16
+  // Note: Turbopack memiliki CSS parsing issues, gunakan webpack mode untuk development dan build
   turbopack: {
     // Silence warning - akan menggunakan default Turbopack optimizations
     root: process.cwd(),
