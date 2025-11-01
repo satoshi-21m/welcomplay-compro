@@ -73,5 +73,6 @@ export default async function BlogPage() {
   )
 }
 
-// ISR dengan revalidation berdasarkan perubahan admin
-export const revalidate = false
+// Dynamic rendering - no ISR untuk menghindari database timeout saat build
+export const dynamic = 'force-dynamic'
+export const revalidate = 0

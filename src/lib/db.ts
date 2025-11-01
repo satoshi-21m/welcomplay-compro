@@ -13,13 +13,13 @@ const pool: mysql.Pool =
     password: process.env.DB_PASSWORD || ',xJanED}~vw{N1Lx',
     database: process.env.DB_NAME || 'welcompl_compro_nextjs',
     waitForConnections: true,
-    connectionLimit: 10,        // ⚡ Increased from 5 for better concurrency
-    queueLimit: 50,             // ⚡ Added limit to prevent memory exhaustion under high load
-    maxIdle: 5,                 // ⚡ Increased from 3 to keep more connections ready
-    idleTimeout: 60000,         // 60s - keep idle connections for reuse
+    connectionLimit: 15,        // ⚡ Increased from 10 for better build concurrency
+    queueLimit: 100,            // ⚡ Increased queue limit for build processes
+    maxIdle: 8,                 // ⚡ More idle connections during build
+    idleTimeout: 120000,        // 120s - longer idle timeout for build stability
     enableKeepAlive: true,      // Prevents connection drops
     keepAliveInitialDelay: 0,
-    connectTimeout: 10000,      // 10s - connection timeout
+    connectTimeout: 30000,      // 30s - much longer connection timeout for slow builds
   })
 
 if (!globalForMysql.mysqlPool) {

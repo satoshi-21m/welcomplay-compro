@@ -43,6 +43,12 @@ export async function getAdminAllBlogPosts(options?: {
   status?: 'PUBLISHED' | 'DRAFT' | 'ARCHIVED' | null
 }) {
   try {
+    // Skip database calls during build time
+    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
+      console.log('🔧 Build time detected - skipping database call for admin blog posts')
+      return { success: true, data: [] }
+    }
+
     const posts = await getAdminBlogPosts(options)
     return {
       success: true,
@@ -350,6 +356,12 @@ export async function deleteBlogPost(id: string) {
  */
 export async function getBlogCategoriesAdmin() {
   try {
+    // Skip database calls during build time
+    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
+      console.log('🔧 Build time detected - skipping database call for blog categories')
+      return { success: true, data: [] }
+    }
+
     const pool = getPool()
     const dbName = process.env.DB_NAME as string
 

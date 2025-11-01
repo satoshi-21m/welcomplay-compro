@@ -14,15 +14,21 @@ export interface SiteSettings {
 
 export async function getSiteSettings(): Promise<SiteSettings> {
   try {
+    // Skip database calls during build time
+    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
+      console.log('🔧 Build time detected - skipping database call for site settings')
+      return {}
+    }
+
     // Check cache first
     const cached = cache.get<SiteSettings>(CACHE_KEY)
     if (cached) {
       return cached
     }
 
-    // Add timeout for build-time safety
+    // Add timeout for build-time safety (increased timeout)
     const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('Database query timeout')), 5000) // 5 second timeout
+      setTimeout(() => reject(new Error('Database query timeout')), 15000) // 15 second timeout
     })
 
     const pool = getPool()
@@ -46,6 +52,12 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     
     return settings
   } catch (error) {
+    // Skip logging during build time to avoid console spam
+    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
+      console.log('🔧 Build time database skip - returning empty settings')
+      return {}
+    }
+    
     // Silently return empty settings during build time or when DB is unavailable
     if (process.env.NODE_ENV === 'production' && !process.env.SKIP_BUILD_PRODUCT_REDIRECTS) {
       // Only log during actual runtime, not during build
