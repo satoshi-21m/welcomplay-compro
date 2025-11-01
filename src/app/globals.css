@@ -1,0 +1,1096 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.625rem;
+  --navbar-height: 80px;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-gray-200 outline-gray-300/50;
+  }
+  body {
+    @apply bg-[#f7f6f9] text-gray-900;
+  }
+  
+  /* Fix untuk scroll ganda dan render berlebihan */
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    background: #f7f6f9;
+    overflow-x: hidden;
+    /* Mencegah scroll ganda */
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@layer components {
+  /* Fix untuk container yang bisa menyebabkan scroll ganda */
+  .flex.h-screen {
+    overflow: hidden;
+  }
+
+  .flex.flex-1.flex-col.overflow-hidden {
+    overflow: hidden;
+  }
+
+  main.flex-1.overflow-auto {
+    /* Pastikan hanya ada satu scrollbar */
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* Mencegah scroll ganda pada mobile */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Fix untuk PageTransition yang bisa menyebabkan layout shift */
+  .PageTransition {
+    width: 100%;
+    height: 100%;
+    /* Mencegah layout shift */
+    contain: layout style paint;
+  }
+
+  /* Fix untuk AdminLayout */
+  .AdminLayout {
+    /* Mencegah render ganda */
+    contain: layout style paint;
+  }
+
+  /* Optimasi untuk mencegah re-render yang tidak perlu */
+  .prevent-rerender {
+    contain: layout style paint;
+    will-change: auto;
+  }
+
+  /* Fix untuk komponen shadcn/ui Select yang menyebabkan overflow */
+  [data-radix-popper-content-wrapper] {
+    /* Mencegah overflow pada Select dropdown */
+    overflow: visible !important;
+    z-index: 9999;
+  }
+
+  [data-radix-select-content] {
+    /* Pastikan Select content tidak menyebabkan scroll */
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Fix untuk SelectContent positioning */
+  .SelectContent {
+    /* Mencegah overflow dan scroll yang tidak perlu */
+    overflow: visible !important;
+    position: relative !important;
+  }
+
+  /* Fix untuk SelectTrigger yang bisa menyebabkan layout shift */
+  .SelectTrigger {
+    /* Mencegah layout shift */
+    contain: layout style paint;
+  }
+
+  /* Fix untuk portfolio form yang menggunakan Select */
+  .portfolio-form .SelectContent {
+    /* Pastikan tidak ada overflow pada portfolio form */
+    overflow: visible !important;
+    max-height: none;
+  }
+
+  /* Fix untuk grid layout yang menggunakan Select */
+  .grid.gap-4.lg\:grid-cols-3 .SelectContent {
+    /* Mencegah overflow pada grid layout */
+    overflow: visible !important;
+    z-index: 1000;
+  }
+
+  /* Optimasi untuk RichTextEditor */
+  .ProseMirror {
+    /* Mencegah scroll berlebih pada editor */
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Optimasi untuk form layout */
+  .portfolio-form-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 1024px) {
+    .portfolio-form-grid {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+
+  /* Fix untuk card spacing */
+  .portfolio-card {
+    margin-bottom: 1rem;
+  }
+
+  .portfolio-card:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Fix untuk Header yang konsisten tinggi */
+  header.bg-white\/80.backdrop-blur-sm.shadow-xs.border-0.h-16.flex-shrink-0 {
+    /* Pastikan header selalu memiliki tinggi yang sama */
+    height: 4rem !important;
+    min-height: 4rem !important;
+    max-height: 4rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Fix untuk search bar yang tidak mengubah tinggi header */
+  header .relative.h-10 {
+    height: 2.5rem !important;
+    min-height: 2.5rem !important;
+    max-height: 2.5rem !important;
+  }
+
+  /* Fix untuk input search yang konsisten */
+  header input.h-10 {
+    height: 2.5rem !important;
+    min-height: 2.5rem !important;
+    max-height: 2.5rem !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Fix untuk profile button yang konsisten */
+  header button.h-10 {
+    height: 2.5rem !important;
+    min-height: 2.5rem !important;
+    max-height: 2.5rem !important;
+  }
+
+  /* Pastikan header container tidak berubah ukuran */
+  header > div {
+    height: 100% !important;
+    min-height: 4rem !important;
+    max-height: 4rem !important;
+  }
+}
+
+@layer utilities {
+  /* Dashboard Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes card1 {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes card2 {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes card3 {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes quickAction1 {
+    from {
+      opacity: 0;
+      transform: translateY(40px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes quickAction2 {
+    from {
+      opacity: 0;
+      transform: translateY(40px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes quickAction3 {
+    from {
+      opacity: 0;
+      transform: translateY(40px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Animation Classes */
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+
+  .animate-slide-up-delay-1 {
+    animation: slideUp 0.6s ease-out 0.2s forwards;
+    opacity: 0;
+  }
+
+  .animate-slide-up-delay-2 {
+    animation: slideUp 0.6s ease-out 0.4s forwards;
+    opacity: 0;
+  }
+
+  .animate-card-1 {
+    animation: card1 0.6s ease-out 0.1s forwards;
+    opacity: 0;
+  }
+
+  .animate-card-2 {
+    animation: card2 0.6s ease-out 0.2s forwards;
+    opacity: 0;
+  }
+
+  .animate-card-3 {
+    animation: card3 0.6s ease-out 0.3s forwards;
+    opacity: 0;
+  }
+
+  .animate-quick-action-1 {
+    animation: quickAction1 0.8s ease-out 0.4s forwards;
+    opacity: 0;
+  }
+
+  .animate-quick-action-2 {
+    animation: quickAction2 0.8s ease-out 0.5s forwards;
+    opacity: 0;
+  }
+
+  .animate-quick-action-3 {
+    animation: quickAction3 0.8s ease-out 0.6s forwards;
+    opacity: 0;
+  }
+
+  /* Login Page Specific Animations */
+  .animate-fade-in-delay-1 {
+    animation: fadeIn 0.8s ease-out 0.1s forwards;
+    opacity: 0;
+  }
+
+  .animate-fade-in-delay-2 {
+    animation: fadeIn 0.8s ease-out 0.2s forwards;
+    opacity: 0;
+  }
+
+  .animate-fade-in-delay-3 {
+    animation: fadeIn 0.8s ease-out 0.3s forwards;
+    opacity: 0;
+  }
+
+  .animate-fade-in-delay-4 {
+    animation: fadeIn 0.8s ease-out 0.4s forwards;
+    opacity: 0;
+  }
+
+  .animate-fade-in-delay-5 {
+    animation: fadeIn 0.8s ease-out 0.5s forwards;
+    opacity: 0;
+  }
+
+  @keyframes cardFloat {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  /* Login Page Animations - Image entrance + floating */
+  @keyframes imageEntrance {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes imageFloat {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-15px) scale(1.05);
+    }
+  }
+
+  /* Login Animation Classes - Image entrance + floating */
+  .animate-image-entrance {
+    animation: imageEntrance 1s ease-out forwards;
+  }
+
+  .animate-image-float {
+    animation: imageFloat 8s ease-in-out infinite;
+  }
+
+  /* Combined animation for image */
+  .animate-image-entrance.animate-image-float {
+    animation: imageEntrance 1s ease-out forwards, imageFloat 8s ease-in-out 1s infinite;
+  }
+
+  .animate-slide-left {
+    animation: slideLeft 0.7s ease-out forwards;
+  }
+
+  .animate-slide-right {
+    animation: slideRight 0.7s ease-out forwards;
+  }
+
+  /* Button Loading Animations */
+  @keyframes loadingShimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Navigation Progress Bar Shimmer */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-loading-shimmer {
+    animation: loadingShimmer 1.5s ease-in-out infinite;
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* Custom animations for profile panel */
+  @keyframes slideInFromTop {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes slideOutToTop {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.95);
+    }
+  }
+
+  .profile-panel-enter {
+    animation: slideInFromTop 0.2s ease-out forwards;
+  }
+
+  .profile-panel-exit {
+    animation: slideOutToTop 0.15s ease-in forwards;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  * {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+
+  /* Enhanced hover effects */
+  .hover-lift {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+
+  /* Hide horizontal scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+
+  /* Focus styles */
+  .focus-ring:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #ef4444;
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .mobile-tap-highlight {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+  }
+
+  /* Dashboard Mobile Responsiveness */
+  @media (max-width: 640px) {
+    /* Stats Cards - Single column on mobile */
+    .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-3 {
+      gap: 0.75rem;
+    }
+    
+    /* Chart section - Full width on mobile */
+    .grid.grid-cols-1.lg\:grid-cols-7 {
+      gap: 1rem;
+    }
+    
+    /* Quick Actions - Better mobile layout */
+    .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-3 {
+      gap: 0.75rem;
+    }
+    
+    /* Card content padding adjustment for mobile */
+    .card-content-mobile {
+      padding: 1rem;
+    }
+    
+    /* Icon sizes for mobile */
+    .icon-mobile {
+      width: 2rem;
+      height: 2rem;
+    }
+    
+    /* Text sizes for mobile */
+    .text-mobile-title {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+    
+    .text-mobile-body {
+      font-size: 0.75rem;
+      line-height: 1rem;
+    }
+    
+    /* Chart height adjustment for mobile */
+    .chart-mobile {
+      height: 12rem;
+    }
+    
+    /* Activity items spacing for mobile */
+    .activity-mobile {
+      gap: 0.75rem;
+    }
+    
+    .activity-mobile .activity-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+    }
+  }
+
+    /* Custom CSS untuk Blog Sidebar Sticky */
+  .blog-sidebar-sticky {
+    position: sticky !important;
+    top: 2rem !important;
+    height: fit-content;
+    z-index: 999;
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  .blog-sidebar-sticky * {
+    transform: translateZ(0);
+  }
+
+  /* Dashboard Animations - Mobile Optimized */
+  @media (max-width: 768px) {
+    .animate-fade-in {
+      animation: fadeInMobile 0.3s ease-out forwards;
+    }
+    
+    .animate-slide-up {
+      animation: slideUpMobile 0.4s ease-out forwards;
+    }
+    
+    .animate-slide-up-delay-1 {
+      animation: slideUpMobile 0.5s ease-out forwards;
+    }
+    
+    .animate-slide-up-delay-2 {
+      animation: slideUpMobile 0.6s ease-out forwards;
+    }
+    
+    .animate-slide-left {
+      animation: slideLeftMobile 0.4s ease-out forwards;
+    }
+    
+    .animate-slide-right {
+      animation: slideRightMobile 0.4s ease-out forwards;
+    }
+    
+    .animate-card-1 {
+      animation: cardSlideUpMobile 0.4s ease-out forwards;
+    }
+    
+    .animate-card-2 {
+      animation: cardSlideUpMobile 0.5s ease-out forwards;
+    }
+    
+    .animate-card-3 {
+      animation: cardSlideUpMobile 0.6s ease-out forwards;
+    }
+    
+    .animate-quick-action-1 {
+      animation: quickActionMobile 0.4s ease-out forwards;
+    }
+    
+    .animate-quick-action-2 {
+      animation: quickActionMobile 0.5s ease-out forwards;
+    }
+    
+    .animate-quick-action-3 {
+      animation: quickActionMobile 0.6s ease-out forwards;
+    }
+  }
+
+  /* Mobile-specific animations */
+  @keyframes fadeInMobile {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUpMobile {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideLeftMobile {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideRightMobile {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes cardSlideUpMobile {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes quickActionMobile {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Touch-friendly interactions for mobile */
+  @media (max-width: 768px) {
+    /* Increase touch targets */
+    .cursor-pointer {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Better hover states for touch devices */
+    .hover\:shadow-xl:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Smooth transitions for mobile */
+    .transition-all {
+      transition: all 0.2s ease-out;
+    }
+    
+    /* Card hover effects for mobile */
+    .group:hover .group-hover\:bg-red-300 {
+      background-color: rgb(252 165 165);
+    }
+    
+    .group:hover .group-hover\:bg-orange-300 {
+      background-color: rgb(251 146 60);
+    }
+    
+    .group:hover .group-hover\:bg-purple-300 {
+      background-color: rgb(196 181 253);
+    }
+  }
+  @theme inline {
+    --animate-aurora: aurora 8s ease-in-out infinite alternate;
+    --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+    --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+   
+    @keyframes aurora {
+      0% {
+        background-position: 0% 50%;
+        transform: rotate(-5deg) scale(0.9);
+      }
+      25% {
+        background-position: 50% 100%;
+        transform: rotate(5deg) scale(1.1);
+      }
+      50% {
+        background-position: 100% 50%;
+        transform: rotate(-3deg) scale(0.95);
+      }
+      75% {
+        background-position: 50% 0%;
+        transform: rotate(3deg) scale(1.05);
+      }
+      100% {
+        background-position: 0% 50%;
+        transform: rotate(-5deg) scale(0.9);
+      }
+    }
+    @keyframes shimmer-slide {
+      to {
+        transform: translate(calc(100cqw - 100%), 0);
+      }
+    }
+    @keyframes spin-around {
+      0% {
+        transform: translateZ(0) rotate(0);
+      }
+      15%,
+      35% {
+        transform: translateZ(0) rotate(90deg);
+      }
+      65%,
+      85% {
+        transform: translateZ(0) rotate(270deg);
+      }
+      100% {
+        transform: translateZ(0) rotate(360deg);
+      }
+    }
+  }
+  /* Fix untuk mobile responsiveness header */
+  @media (max-width: 768px) {
+    header.bg-white\/80.backdrop-blur-sm.shadow-xs.border-0.h-16.flex-shrink-0 {
+      height: 4rem !important;
+      min-height: 4rem !important;
+      max-height: 4rem !important;
+    }
+    
+    header .relative.h-10 {
+      height: 2.5rem !important;
+      min-height: 2.5rem !important;
+      max-height: 2.5rem !important;
+    }
+    
+    header input.h-10 {
+      height: 2.5rem !important;
+      min-height: 2.5rem !important;
+      max-height: 2.5rem !important;
+    }
+  }
+
+  /* Smooth page transitions */
+  .page-transitioning {
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .page-transitioning * {
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  /* Smooth fade out effect */
+  .page-transitioning.fade-out {
+    opacity: 0;
+  }
+
+  /* Smooth fade in effect */
+  .page-transitioning.fade-in {
+    opacity: 1;
+  }
+
+  /* Prevent layout shift during transitions */
+  .page-transitioning {
+    min-height: 100vh;
+  }
+
+  /* Smooth loading states */
+  .loading-smooth {
+    transition: all 0.3s ease-in-out;
+  }
+
+  /* Smooth button transitions */
+  button, a {
+    transition: all 0.2s ease-in-out;
+  }
+
+  /* Smooth form transitions */
+  input, textarea, select {
+    transition: all 0.2s ease-in-out;
+  }
+}
+
+
+
+
+/* Site custom additions */
+.text-custom-red { color: #dc2626; }
+.bg-custom-red { background-color: #dc2626; }
+.hover\:bg-custom-red-hover:hover { background-color: #b91c1c; }
+.navbar-font { font-feature-settings: "liga" 1; }
+.animate-logo-slide-fast { animation: logoSlide 20s linear infinite; }
+
+/* Hide scrollbar pada mobile menu dropdown */
+.mobile-menu-dropdown {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.mobile-menu-dropdown::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+  width: 0;
+  height: 0;
+}
+
+/* iOS-specific scrollbar hiding */
+@supports (-webkit-touch-callout: none) {
+  .mobile-menu-dropdown {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  
+  .mobile-menu-dropdown::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+}
+
+/* iOS Optimization - Hardware Acceleration & Anti-Shake */
+@layer utilities {
+  /* Force hardware acceleration untuk menghindari shaky animations di iOS */
+  .will-change-transform {
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+    -moz-perspective: 1000px;
+    perspective: 1000px;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Optimasi untuk semua elemen yang dianimasikan */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Anti-shake untuk transform animations - iOS specific */
+  @supports (-webkit-touch-callout: none) {
+    /* iOS Safari specific fixes */
+    body {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+    
+    /* Prevent subpixel rendering issues */
+    [class*="transform"],
+    [style*="transform"],
+    .will-change-transform {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-font-smoothing: subpixel-antialiased;
+      image-rendering: -webkit-optimize-contrast;
+    }
+  }
+}
+
+/* Smooth animations globally */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+
+/* Additional iOS smoothness */
+@supports (-webkit-overflow-scrolling: touch) {
+  /* Create compositing layer for better performance */
+  .will-change-transform,
+  [class*="animate"] {
+    -webkit-transform: translateZ(0) scale(1.0, 1.0);
+    transform: translateZ(0) scale(1.0, 1.0);
+  }
+}
+
+/* Pure CSS Animations for iOS - No Shake */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 30px, 0);
+    transform: translate3d(0, 30px, 0);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* CSS-based sequential animations untuk iOS */
+@layer components {
+  .hero-animate-1 {
+    animation: fadeSlideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0s forwards;
+    opacity: 0;
+  }
+  
+  .hero-animate-2 {
+    animation: fadeSlideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
+    opacity: 0;
+  }
+  
+  .hero-animate-3 {
+    animation: fadeSlideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1.2s forwards;
+    opacity: 0;
+  }
+  
+  .hero-animate-4 {
+    animation: fadeSlideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1.8s forwards;
+    opacity: 0;
+  }
+  
+  .hero-animate-5 {
+    animation: fadeSlideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 2.4s forwards;
+    opacity: 0;
+  }
+  
+  .hero-animate-6 {
+    animation: fadeSlideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 3.0s forwards;
+    opacity: 0;
+  }
+}
+
