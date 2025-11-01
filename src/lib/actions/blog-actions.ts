@@ -304,11 +304,40 @@ async function getLandingBlogPostsLimited(limit: number = 24): Promise<BlogPost[
   }
 }
 
+// Runtime version without build-time skip
+async function getLandingBlogPostsRuntime(limit: number = 24): Promise<BlogPost[]> {
+  try {
+    return await getPublicBlogPosts(limit)
+  } catch (error: any) {
+    console.error('❌ getLandingBlogPostsRuntime - Error:', error.message)
+    return []
+  }
+}
+
 // ⚡ OPTIMIZED: Landing page hanya butuh 3 posts, bukan 24!
 // ✅ ISR + On-Demand Revalidation: Cache di edge/CDN, update saat admin ubah konten
-export const getLandingBlogPosts = unstableCache(
-  async (limit: number = 3): Promise<BlogPost[]> => getLandingBlogPostsLimited(limit),
-  ['blog:landing:homepage'],
+export async function getLandingBlogPosts(limit: number = 3): Promise<BlogPost[]> {
+  // Use direct service call during build time to avoid caching empty results
+  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
+    console.log('🔧 Build time detected - using direct blog posts call')
+    try {
+      return await getLandingBlogPostsRuntime(limit)
+    } catch (error) {
+      console.log('🔧 Build time blog posts fetch failed, returning empty array')
+      return []
+    }
+  }
+  
+  // Use cached version for runtime
+  return await getCachedLandingBlogPosts(limit)
+}
+
+// Cached version for runtime
+const getCachedLandingBlogPosts = unstableCache(
+  async (limit: number = 3): Promise<BlogPost[]> => {
+    return getLandingBlogPostsRuntime(limit)
+  },
+  ['blog:landing:posts'],
   { 
     revalidate: 3600, // 1 hour - lebih lama karena ada on-demand revalidation
     tags: ['blog:landing:list', 'blog:posts'] // Tags untuk on-demand revalidation
@@ -317,8 +346,27 @@ export const getLandingBlogPosts = unstableCache(
 
 // Untuk blog page - fetch all published posts dengan caching
 // Client-side pagination akan handle display (9 posts per page)
-export const getAllBlogPostsForPage = unstableCache(
-  async (limit: number = 200): Promise<BlogPost[]> => getLandingBlogPostsLimited(limit),
+export async function getAllBlogPostsForPage(limit: number = 200): Promise<BlogPost[]> {
+  // Use direct service call during build time to avoid caching empty results
+  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
+    console.log('🔧 Build time detected - using direct all blog posts call')
+    try {
+      return await getLandingBlogPostsRuntime(limit)
+    } catch (error) {
+      console.log('🔧 Build time all blog posts fetch failed, returning empty array')
+      return []
+    }
+  }
+  
+  // Use cached version for runtime
+  return await getCachedAllBlogPostsForPage(limit)
+}
+
+// Cached version for runtime
+const getCachedAllBlogPostsForPage = unstableCache(
+  async (limit: number = 200): Promise<BlogPost[]> => {
+    return getLandingBlogPostsRuntime(limit)
+  },
   ['blog:landing:list'],
   { 
     revalidate: 3600, // 1 hour - lebih lama karena ada on-demand revalidation
@@ -348,7 +396,24 @@ export const getLandingRecentBlogPosts = unstableCache(
 )
 
 // ✅ ISR + On-Demand Revalidation untuk categories
-export const getLandingBlogCategories = unstableCache(
+export async function getLandingBlogCategories() {
+  // Use direct service call during build time to avoid caching empty results
+  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
+    console.log('🔧 Build time detected - using direct blog categories call')
+    try {
+      return await getBlogCategoriesService()
+    } catch (error) {
+      console.log('🔧 Build time category fetch failed, returning empty array')
+      return []
+    }
+  }
+  
+  // Use cached version for runtime
+  return await getCachedBlogCategories()
+}
+
+// Cached version for runtime
+const getCachedBlogCategories = unstableCache(
   async () => {
     return await getBlogCategoriesService()
   },

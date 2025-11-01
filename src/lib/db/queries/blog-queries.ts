@@ -34,21 +34,21 @@ async function getBlogSchemaInfo() {
         'featured_image_alt': true,
         'status': true,
         'is_featured': true,
-        'published_at': true,
+        'published_at': false,  // This column doesn't exist
         'created_at': true,
         'updated_at': true,
         'content': true,
         'excerpt': true,
         'category_id': true,
-        'category': true,
+        'category': false,      // Use categories table instead
         'meta_title': true,
         'meta_description': true,
         'meta_keywords': true,
         'author_id': true
       },
       hasCategoriesTable: true,
-      hasUsersTable: true,
-      hasUserNameCol: true
+      hasUsersTable: false,       // Users table doesn't exist or name column is different
+      hasUserNameCol: false       // Name column doesn't exist in users table
     }
     return blogSchemaCache
   }
@@ -142,12 +142,6 @@ async function getBlogSchemaInfo() {
  */
 export async function getBlogPostBySlugCore(slug: string): Promise<any | null> {
   try {
-    // Skip database calls during build time
-    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
-      console.log('🔧 Build time detected - skipping database call for blog post by slug')
-      return null
-    }
-
     const pool = getPool()
     const schema = await getBlogSchemaInfo()
     const { cols, hasCategoriesTable, hasUsersTable, hasUserNameCol } = schema
@@ -231,12 +225,6 @@ export async function getBlogPostsCore(options: {
   category?: string
 }): Promise<any[]> {
   try {
-    // Skip database calls during build time
-    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
-      console.log('🔧 Build time detected - skipping database call for blog posts')
-      return []
-    }
-
     const pool = getPool()
     const schema = await getBlogSchemaInfo()
     const { cols, hasCategoriesTable, hasUsersTable, hasUserNameCol } = schema
@@ -336,12 +324,6 @@ export async function getBlogPostsCore(options: {
  */
 export async function getBlogCategoriesCore(): Promise<Array<{ id: number; name: string; post_count?: number }>> {
   try {
-    // Skip database calls during build time
-    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
-      console.log('🔧 Build time detected - skipping database call for blog categories')
-      return []
-    }
-
     const pool = getPool()
     const schema = await getBlogSchemaInfo()
     const { cols, hasCategoriesTable } = schema
