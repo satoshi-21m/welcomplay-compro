@@ -25,34 +25,6 @@ let blogSchemaCache: null | {
 async function getBlogSchemaInfo() {
   if (blogSchemaCache) return blogSchemaCache
   
-  // Skip database calls during build time
-  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
-    console.log('🔧 Build time detected - returning default blog schema')
-    blogSchemaCache = {
-      cols: {
-        'featured_image': true,
-        'featured_image_alt': true,
-        'status': true,
-        'is_featured': true,
-        'published_at': false,  // This column doesn't exist
-        'created_at': true,
-        'updated_at': true,
-        'content': true,
-        'excerpt': true,
-        'category_id': true,
-        'category': false,      // Use categories table instead
-        'meta_title': true,
-        'meta_description': true,
-        'meta_keywords': true,
-        'author_id': true
-      },
-      hasCategoriesTable: true,
-      hasUsersTable: false,       // Users table doesn't exist or name column is different
-      hasUserNameCol: false       // Name column doesn't exist in users table
-    }
-    return blogSchemaCache
-  }
-  
   const pool = getPool()
   const dbName = process.env.DB_NAME as string
   

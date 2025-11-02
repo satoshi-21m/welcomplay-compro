@@ -34,20 +34,12 @@ export async function getAdminPortfolioBySlug(slug: string) {
   }
 }
 
-/**
- * Get all portfolio items (Admin view)
- */
-export async function getAdminAllPortfolio(options?: {
+// Direct admin portfolio call without build-time conditional logic
+async function fetchAdminAllPortfolio(options?: {
   limit?: number
   offset?: number
 }) {
   try {
-    // Skip database calls during build time
-    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
-      console.log('🔧 Build time detected - skipping database call for admin portfolio')
-      return { success: true, data: [] }
-    }
-
     const portfolios = await getAdminPortfolioItems(options)
     return {
       success: true,
@@ -62,6 +54,18 @@ export async function getAdminAllPortfolio(options?: {
     }
   }
 }
+
+/**
+ * Get all portfolio items (Admin view)
+ */
+export const getAdminAllPortfolio = unstableCache(
+  fetchAdminAllPortfolio,
+  ['admin-portfolio'],
+  {
+    revalidate: 3600, // 1 hour
+    tags: ['admin:portfolio:items']
+  }
+)
 
 // Alias for compatibility
 export const getCachedAdminPortfolioItems = getAdminAllPortfolio
@@ -497,12 +501,6 @@ export async function deletePortfolio(id: string) {
  */
 async function getPortfolioCategoriesCore() {
   try {
-    // Skip database calls during build time
-    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
-      console.log('🔧 Build time detected - skipping database call for portfolio categories')
-      return { success: true, data: [] }
-    }
-
     const pool = getPool()
     
     // ⚡ Single optimized query with LEFT JOIN for portfolio count
@@ -558,12 +556,6 @@ export const getPortfolioCategories = getPortfolioCategoriesCore
  */
 async function getProjectTypesCore() {
   try {
-    // Skip database calls during build time
-    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
-      console.log('🔧 Build time detected - skipping database call for project types')
-      return { success: true, data: [] }
-    }
-
     const pool = getPool()
     
     // ⚡ Single optimized query with LEFT JOIN for portfolio count

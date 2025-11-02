@@ -3,6 +3,7 @@
 import { getPool } from '@/lib/db'
 import { TABLES } from '@/lib/db-constants'
 import { revalidateTag } from 'next/cache'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { getAdminBlogPost, getAdminBlogPosts } from '@/lib/services/blog-service'
 import { revalidateBlog } from '@/lib/revalidate-webhook'
 
@@ -34,21 +35,13 @@ export async function getAdminBlogPostBySlug(slug: string) {
   }
 }
 
-/**
- * Get all blog posts (Admin view - includes all statuses)
- */
-export async function getAdminAllBlogPosts(options?: {
+// Direct admin blog posts call without build-time conditional logic
+async function fetchAdminBlogPosts(options?: {
   limit?: number
   offset?: number
   status?: 'PUBLISHED' | 'DRAFT' | 'ARCHIVED' | null
 }) {
   try {
-    // Skip database calls during build time
-    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
-      console.log('🔧 Build time detected - skipping database call for admin blog posts')
-      return { success: true, data: [] }
-    }
-
     const posts = await getAdminBlogPosts(options)
     return {
       success: true,
@@ -63,6 +56,18 @@ export async function getAdminAllBlogPosts(options?: {
     }
   }
 }
+
+/**
+ * Get all blog posts (Admin view - includes all statuses)
+ */
+export const getAdminAllBlogPosts = unstableCache(
+  fetchAdminBlogPosts,
+  ['admin-blog-posts'],
+  {
+    revalidate: 3600, // 1 hour
+    tags: ['admin:blog:posts']
+  }
+)
 
 // Alias for compatibility
 export const getCachedAdminBlogPosts = getAdminAllBlogPosts
@@ -351,17 +356,9 @@ export async function deleteBlogPost(id: string) {
 // CATEGORY OPERATIONS
 // ============================================
 
-/**
- * Get all categories
- */
-export async function getBlogCategoriesAdmin() {
+// Direct blog categories call without build-time conditional logic
+async function fetchBlogCategoriesAdmin() {
   try {
-    // Skip database calls during build time
-    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
-      console.log('🔧 Build time detected - skipping database call for blog categories')
-      return { success: true, data: [] }
-    }
-
     const pool = getPool()
     const dbName = process.env.DB_NAME as string
 
@@ -402,6 +399,18 @@ export async function getBlogCategoriesAdmin() {
     }
   }
 }
+
+/**
+ * Get all categories
+ */
+export const getBlogCategoriesAdmin = unstableCache(
+  fetchBlogCategoriesAdmin,
+  ['admin-blog-categories'],
+  {
+    revalidate: 3600, // 1 hour
+    tags: ['admin:blog:categories']
+  }
+)
 
 // Alias for compatibility
 export const getCachedAdminBlogCategories = getBlogCategoriesAdmin

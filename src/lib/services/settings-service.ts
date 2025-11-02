@@ -1,8 +1,6 @@
 import { getPool } from '../db'
-import { cache } from '../cache'
-
-const CACHE_KEY = 'site_settings'
-const CACHE_TTL = 300000 // 5 minutes
+import { unstable_cache as unstableCache } from 'next/cache'
+import { revalidateTag } from 'next/cache'
 
 export interface SiteSettings {
   google_analytics_id?: string
@@ -12,32 +10,14 @@ export interface SiteSettings {
   custom_body_scripts?: string
 }
 
-export async function getSiteSettings(): Promise<SiteSettings> {
+// Direct database call without build-time conditional logic
+async function fetchSiteSettingsFromDB(): Promise<SiteSettings> {
   try {
-    // Skip database calls during build time
-    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
-      console.log('🔧 Build time detected - skipping database call for site settings')
-      return {}
-    }
-
-    // Check cache first
-    const cached = cache.get<SiteSettings>(CACHE_KEY)
-    if (cached) {
-      return cached
-    }
-
-    // Add timeout for build-time safety (increased timeout)
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('Database query timeout')), 15000) // 15 second timeout
-    })
-
     const pool = getPool()
     
-    const queryPromise = pool.query(
+    const [rows] = await pool.query(
       `SELECT setting_key, setting_value FROM settings WHERE category = 'third_party_scripts'`
-    )
-
-    const [rows] = await Promise.race([queryPromise, timeoutPromise]) as any
+    ) as any
     
     const settings: SiteSettings = {}
     
@@ -47,27 +27,24 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       })
     }
     
-    // Cache the settings
-    cache.set(CACHE_KEY, settings, CACHE_TTL)
-    
     return settings
   } catch (error) {
-    // Skip logging during build time to avoid console spam
-    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
-      console.log('🔧 Build time database skip - returning empty settings')
-      return {}
-    }
-    
-    // Silently return empty settings during build time or when DB is unavailable
-    if (process.env.NODE_ENV === 'production' && !process.env.SKIP_BUILD_PRODUCT_REDIRECTS) {
-      // Only log during actual runtime, not during build
-      console.error('Error fetching site settings:', error)
-    }
+    console.error('Error fetching site settings:', error)
     return {}
   }
 }
 
+// Main function using unstable_cache directly like portfolio and blog
+export const getSiteSettings = unstableCache(
+  fetchSiteSettingsFromDB,
+  ['site-settings'],
+  {
+    revalidate: 3600, // 1 hour
+    tags: ['settings']
+  }
+)
+
 export function invalidateSiteSettingsCache() {
-  cache.delete(CACHE_KEY)
+  revalidateTag('settings', "")
 }
 
